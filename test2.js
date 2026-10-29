@@ -1,0 +1,1 @@
+const { Project, SyntaxKind } = require('ts-morph'); const project = new Project({compilerOptions:{allowJs:true}}); project.addSourceFileAtPath('demo/dummy_code.ts'); const sf = project.getSourceFiles()[0]; const vars = sf.getVariableDeclarations(); for(const v of vars) console.log(v.getName(), v.getInitializer()?.getKindName());  

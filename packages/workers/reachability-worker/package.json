@@ -1,0 +1,22 @@
+{
+  "name": "@ai-code-debt/reachability-worker",
+  "version": "1.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@ai-code-debt/core": "workspace:*",
+    "bullmq": "^5.7.0",
+    "ioredis": "^5.3.2",
+    "madge": "^6.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "@types/madge": "^5.0.3",
+    "typescript": "^5.4.2"
+  }
+}

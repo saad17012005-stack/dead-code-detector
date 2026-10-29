@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+  postgres:
+    image: ankane/pgvector:v0.5.1
+    environment:
+      POSTGRES_USER: ai_code_debt
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ai_code_debt
+    ports:
+      - "5432:5432"

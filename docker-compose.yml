@@ -1,0 +1,138 @@
+version: '3.8'
+services:
+  postgres:
+    image: ankane/pgvector:v0.5.1
+    environment:
+      POSTGRES_USER: ai_code_debt
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ai_code_debt
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./packages/core/src/db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  embedding-service:
+    build: 
+      context: ./packages/embedding-service
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      target: api
+    environment:
+      - PG_HOST=postgres
+      - REDIS_HOST=redis
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+
+  web:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      target: web
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:3001
+
+  ingestion-worker:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      target: ingestion-worker
+    environment:
+      - PG_HOST=postgres
+      - REDIS_HOST=redis
+    depends_on:
+      - postgres
+      - redis
+
+  analysis-worker:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      target: analysis-worker
+    environment:
+      - PG_HOST=postgres
+      - REDIS_HOST=redis
+    depends_on:
+      - postgres
+      - redis
+
+  similarity-worker:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      target: similarity-worker
+    environment:
+      - PG_HOST=postgres
+      - REDIS_HOST=redis
+      - EMBEDDING_SERVICE_URL=http://embedding-service:8000
+    depends_on:
+      - postgres
+      - redis
+      - embedding-service
+
+  reachability-worker:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      target: reachability-worker
+    environment:
+      - PG_HOST=postgres
+      - REDIS_HOST=redis
+    depends_on:
+      - postgres
+      - redis
+
+  provenance-worker:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      target: provenance-worker
+    environment:
+      - PG_HOST=postgres
+      - REDIS_HOST=redis
+    depends_on:
+      - postgres
+      - redis
+
+  llm-verifier-worker:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      target: llm-verifier-worker
+    environment:
+      - PG_HOST=postgres
+      - REDIS_HOST=redis
+      - LLM_VERIFIER_API_KEY=${LLM_VERIFIER_API_KEY}
+    depends_on:
+      - postgres
+      - redis
+
+  reporting-worker:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      target: reporting-worker
+    environment:
+      - PG_HOST=postgres
+      - REDIS_HOST=redis
+    depends_on:
+      - postgres
+      - redis
+
+volumes:
+  pgdata:

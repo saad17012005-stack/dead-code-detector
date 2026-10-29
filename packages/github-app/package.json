@@ -1,0 +1,16 @@
+{
+  "name": "@ai-code-debt/github-app",
+  "version": "1.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.2"
+  },
+  "dependencies": {
+    "@ai-code-debt/core": "workspace:^"
+  }
+}

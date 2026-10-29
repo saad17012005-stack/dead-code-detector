@@ -1,0 +1,23 @@
+{
+  "name": "@ai-code-debt/cli",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "bin": {
+    "ai-code-debt": "bin/run.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w",
+    "scan": "node bin/run.js scan"
+  },
+  "dependencies": {
+    "@ai-code-debt/core": "workspace:*",
+    "chalk": "^4.1.2",
+    "commander": "^12.0.0",
+    "ora": "^5.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "typescript": "^5.4.2"
+  }
+}

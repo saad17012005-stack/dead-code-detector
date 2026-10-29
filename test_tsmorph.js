@@ -1,0 +1,1 @@
+const { Project } = require('ts-morph'); const project = new Project(); const sf = project.createSourceFile('test.ts', 'export function unused() { }'); const func = sf.getFunction('unused'); const refs = func.getNameNode().findReferencesAsNodes(); console.log(refs.length);  
